@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Webscraper {
 
-    String Url = "https://www.aboutyou.hu/ferfi/ruhazat/polok/polok?styleGroup=4";
+    String Url = "https://www.aboutyou.hu/ferfi/ruhazat/polok/polok/";
 
     Document page;
 
@@ -23,7 +23,7 @@ public class Webscraper {
             e.printStackTrace();
         }
         String clothesSelector = ".jgRgsg";
-        Elements elements = page.select(clothesSelector );
+        Elements elements = page.select(clothesSelector);
         List<String> elems = new ArrayList<>();
         for (Element element : elements) {
             elems.add(element.child(0).absUrl("src"));
