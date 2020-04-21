@@ -1,4 +1,4 @@
-package imageprocess.aboutYouPOJO2;
+package com.searchoutfit.app.imageprocess.aboutYouPOJO2;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
