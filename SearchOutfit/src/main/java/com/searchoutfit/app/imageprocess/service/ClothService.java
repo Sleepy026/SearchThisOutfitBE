@@ -33,7 +33,6 @@ public class ClothService {
             items.add(getImagesFromURL("https://api-cloud.aboutyou.de/v1/products?page="+i+"&perPage=1000"));
         }
         getHashes();
-        System.out.println(getUrls().toString());
     }
 
     private void getHashes(){
