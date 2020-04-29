@@ -3,9 +3,11 @@ package com.searchoutfit.app.vision;
 import com.google.api.gax.longrunning.OperationFuture;
 import com.google.cloud.vision.v1.*;
 import com.google.cloud.vision.v1.ImportProductSetsGcsSource.Builder;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
+@Service
 public class ManageProductSet {
 
     public static void createProductSet(

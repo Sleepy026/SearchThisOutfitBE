@@ -13,6 +13,8 @@ import com.google.cloud.vision.v1.ProductSearchParams;
 import com.google.cloud.vision.v1.ProductSearchResults.Result;
 import com.google.cloud.vision.v1.ProductSetName;
 import com.google.protobuf.ByteString;
+import org.springframework.stereotype.Service;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -20,7 +22,7 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 
-
+@Service
 public class ProductSearch {
 
     public static void getSimilarProductsFile(
