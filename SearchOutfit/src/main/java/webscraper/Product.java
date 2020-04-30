@@ -40,4 +40,16 @@ public class Product {
     public String getSubClassification() {
         return subClassification;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId='" + productId + '\'' +
+                ", productName='" + productName + '\'' +
+                ", productUrl='" + productUrl + '\'' +
+                ", referenceImageUrl='" + referenceImageUrl + '\'' +
+                ", classification='" + classification + '\'' +
+                ", subClassification='" + subClassification + '\'' +
+                '}';
+    }
 }

@@ -1,16 +1,23 @@
 package com.searchoutfit.app.vision;
-
 import com.google.api.gax.longrunning.OperationFuture;
 import com.google.cloud.vision.v1.*;
 import com.google.cloud.vision.v1.ImportProductSetsGcsSource.Builder;
 import org.springframework.stereotype.Service;
-
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
 
 @Service
 public class ManageProductSet {
 
-    public static void createProductSet(
+    public void createProductSet(
             String projectId, String computeRegion, String productSetId, String productSetDisplayName)
             throws IOException {
         try (ProductSearchClient client = ProductSearchClient.create()) {
@@ -33,7 +40,7 @@ public class ManageProductSet {
         }
     }
 
-    public static void importProductSets(String projectId, String computeRegion, String gcsUri)
+    public void importProductSets(String projectId, String computeRegion, String gcsUri)
             throws Exception {
         try (ProductSearchClient client = ProductSearchClient.create()) {
 
@@ -69,11 +76,13 @@ public class ManageProductSet {
         }
     }
 
-    public static void createProduct(
+    public void createProduct(
             String projectId,
             String computeRegion,
             String productId,
             String productDisplayName,
+            String productUrl,
+            Product.KeyValue label,
             String productCategory)
             throws IOException {
         try (ProductSearchClient client = ProductSearchClient.create()) {
@@ -87,6 +96,8 @@ public class ManageProductSet {
                             .setName(productId)
                             .setDisplayName(productDisplayName)
                             .setProductCategory(productCategory)
+                            .setDescription(productUrl)
+                            .addProductLabels(label)
                             .build();
             Product product = client.createProduct(formattedParent, myProduct, productId);
             // Display the product information
@@ -94,7 +105,7 @@ public class ManageProductSet {
         }
     }
 
-    public static void addProductToProductSet(
+    public void addProductToProductSet(
             String projectId, String computeRegion, String productId, String productSetId)
             throws IOException {
         try (ProductSearchClient client = ProductSearchClient.create()) {
@@ -113,7 +124,7 @@ public class ManageProductSet {
         }
     }
 
-    public static void removeProductFromProductSet(
+    public void removeProductFromProductSet(
             String projectId, String computeRegion, String productId, String productSetId)
             throws IOException {
         try (ProductSearchClient client = ProductSearchClient.create()) {
@@ -134,7 +145,7 @@ public class ManageProductSet {
     }
 
 
-    public static void createReferenceImage(
+    public void createReferenceImage(
             String projectId,
             String computeRegion,
             String productId,
@@ -157,7 +168,7 @@ public class ManageProductSet {
         }
     }
 
-    public static void listProductSets(String projectId, String computeRegion) throws IOException {
+    public void listProductSets(String projectId, String computeRegion) throws IOException {
         try (ProductSearchClient client = ProductSearchClient.create()) {
             // A resource that represents Google Cloud Platform location.
             String formattedParent = ProductSearchClient.formatLocationName(projectId, computeRegion);
@@ -178,7 +189,7 @@ public class ManageProductSet {
         }
     }
 
-    public static void getProductSet(String projectId, String computeRegion, String productSetId)
+    public void getProductSet(String projectId, String computeRegion, String productSetId)
             throws IOException {
         try (ProductSearchClient client = ProductSearchClient.create()) {
 
@@ -201,7 +212,7 @@ public class ManageProductSet {
         }
     }
 
-    public static void listProducts(String projectId, String computeRegion) throws IOException {
+    public void listProducts(String projectId, String computeRegion) throws IOException {
         try (ProductSearchClient client = ProductSearchClient.create()) {
 
             // A resource that represents Google Cloud Platform location.
@@ -224,7 +235,7 @@ public class ManageProductSet {
         }
     }
 
-    public static void listProductsInProductSet(
+    public void listProductsInProductSet(
             String projectId, String computeRegion, String productSetId) throws IOException {
         try (ProductSearchClient client = ProductSearchClient.create()) {
 
@@ -250,7 +261,7 @@ public class ManageProductSet {
         }
     }
 
-    public static void getProduct(String projectId, String computeRegion, String productId)
+    public void getProduct(String projectId, String computeRegion, String productId)
             throws IOException {
         try (ProductSearchClient client = ProductSearchClient.create()) {
 
@@ -275,7 +286,7 @@ public class ManageProductSet {
         }
     }
 
-    public static void listReferenceImagesOfProduct(
+    public void listReferenceImagesOfProduct(
             String projectId, String computeRegion, String productId) throws IOException {
         try (ProductSearchClient client = ProductSearchClient.create()) {
 
@@ -298,7 +309,7 @@ public class ManageProductSet {
         }
     }
 
-    public static void getReferenceImage(
+    public void getReferenceImage(
             String projectId, String computeRegion, String productId, String referenceImageId)
             throws IOException {
         try (ProductSearchClient client = ProductSearchClient.create()) {
@@ -320,5 +331,41 @@ public class ManageProductSet {
                             "Reference image bounding polygons: %s \n", image.getBoundingPolysList().toString()));
         }
     }
+
+    public void uploadObject(
+                String projectId, String bucketName, String objectName, String filePath) throws IOException {
+            // The ID of your GCP project
+            // String projectId = "your-project-id";
+
+            // The ID of your GCS bucket
+            // String bucketName = "your-unique-bucket-name";
+
+            // The ID of your GCS object
+            // String objectName = "your-object-name";
+
+            // The path to your file to upload
+            // String filePath = "path/to/your/file"
+
+            URL url = new URL(filePath);
+            InputStream in = new BufferedInputStream(url.openStream());
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            int n = 0;
+            while (-1!=(n=in.read(buf)))
+            {
+                out.write(buf, 0, n);
+            }
+            out.close();
+            in.close();
+            byte[] response = out.toByteArray();
+
+            Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
+            BlobId blobId = BlobId.of(bucketName, objectName);
+            BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+            storage.create(blobInfo, response);
+
+            System.out.println(
+                    "File " + filePath + " uploaded to bucket " + bucketName + " as " + objectName);
+        }
 
 }
