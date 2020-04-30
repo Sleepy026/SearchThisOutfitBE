@@ -19,9 +19,9 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
 
+
 @SpringBootApplication
 public class AppApplication {
-
 
 
     public static void main(String[] args) {
@@ -32,7 +32,8 @@ public class AppApplication {
 //        System.out.println(products);
 
         try {
-            ManageProductSet.createProductSet("neat-fin-275018","europe-west1", "Clothes", "Clothes" );
+//            ManageProductSet.createProductSet("neat-fin-275018","europe-west1", "Clothes", "Clothes" );
+          ManageProductSet.listProductSets("neat-fin-275018", "europe-west1");
         } catch (IOException e) {
             e.printStackTrace();
         }
