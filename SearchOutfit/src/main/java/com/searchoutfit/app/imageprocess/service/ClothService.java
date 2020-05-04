@@ -28,13 +28,11 @@ public class ClothService {
         return resp.getBody();
     }
 
-    @PostConstruct
     private void init(){
         for (int i = 1; i < 10; i++) {
             items.add(getImagesFromURL("https://api-cloud.aboutyou.de/v1/products?page="+i+"&perPage=1000"));
         }
         getHashes();
-        System.out.println(getUrls().toString());
     }
 
     private void getHashes(){

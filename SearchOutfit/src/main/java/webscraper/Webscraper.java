@@ -5,30 +5,63 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class Webscraper {
 
-    String Url = "https://www.aboutyou.hu/ferfi/ruhazat/polok/polok/";
+    String url = "https://www.fashiondays.hu/g/f%C3%A9rfi-/ruh%C3%A1zat";
 
+    Document paginationPage;
     Document page;
 
-    public List<String> getClothesImages(){
+    List<Product> products = new ArrayList<>();
+
+    public List<Product> getClothesImages() {
         try {
-            page = Jsoup.connect(Url).userAgent("Jsoup Scraper").get();
+            paginationPage = Jsoup.connect(url).userAgent("Jsoup Scraper").get();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String clothesSelector = ".jgRgsg";
-        Elements elements = page.select(clothesSelector);
-        List<String> elems = new ArrayList<>();
-        for (Element element : elements) {
-            elems.add(element.child(0).absUrl("src"));
+
+        Elements pagination = paginationPage.select(".pagination > li > a");
+
+        for (Element e:pagination) {
+            String url = e.attr("abs:href");
+            try {
+                page = Jsoup.connect(url).get();
+            } catch (IOException a){
+                a.printStackTrace();
+            }
+
+            String clothesSelector = ".vrecom_product";
+            Elements elements = page.select(clothesSelector);
+
+            for (Element element : elements) {
+                try {
+
+                    String id = element.child(2).attr("data-gtm-id");
+                    String productUrl = element.child(2).attr("href");
+                    String productName = element.child(2).attr("title");
+                    String classification = element.child(2).attr("data-gtm-classification");
+                    String subClassification = element.child(2).attr("data-gtm-subclassification");
+                    String referenceImgUrl = element.child(2).child(0).child(1).attr("data-original");
+
+                    products.add(new Product(
+                            id,productName,productUrl,referenceImgUrl,classification,subClassification
+                    ));
+                } catch (Exception exep){
+                    System.out.println(exep);
+                }
+            }
         }
-        return elems;
+
+
+        return products;
     }
 
 
