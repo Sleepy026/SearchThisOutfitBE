@@ -3,20 +3,17 @@ package com.searchoutfit.app.controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Arrays;
 
-
+@CrossOrigin(origins = "*")
 @RestController
 public class ImageController {
 
-    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/img-upload", method = RequestMethod.POST)
-    public String uploadImage(@RequestParam MultipartFile file, HttpServletRequest request, HttpServletResponse response) {
-        System.out.println(file.toString());
-        return file.toString();
+    public byte[] uploadImage(@RequestParam MultipartFile file) throws IOException {
+        System.out.println(Arrays.toString(file.getBytes()));
+        return file.getBytes();
     }
-
-
 
 }
