@@ -29,16 +29,16 @@ public class AppApplication {
         SpringApplication.run(AppApplication.class, args);
     }
 
-    @PostConstruct
-    public void init() throws Exception {
-
-        productSearch.getSimilarProductsGcs(
-                "neat-fin-275018",
-                "europe-west1",
-                "clothes",
-                "apparel-v2",
-                "gs://productsearch1337/Mintás póló logóval");
-    }
+//    @PostConstruct
+//    public void init() throws Exception {
+//
+//        productSearch.getSimilarProductsGcs(
+//                "neat-fin-275018",
+//                "europe-west1",
+//                "clothes",
+//                "apparel-v2",
+//                "gs://productsearch1337/Mintás póló logóval");
+//    }
 
 
 }

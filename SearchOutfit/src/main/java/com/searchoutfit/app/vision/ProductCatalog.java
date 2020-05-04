@@ -21,10 +21,12 @@ public class ProductCatalog {
                             .setValue(p.getSubClassification())
                             .build();
 
-                    manageProductSet.uploadObject("neat-fin-275018",
-                            "productsearch1337",
-                             p.getProductName(),
-                             p.getReferenceImageUrl());
+//                    manageProductSet.uploadObject("neat-fin-275018",
+//                            "productsearch1337",
+//                             p.getProductName(),
+//                             p.getReferenceImageUrl());
+
+
 
                     manageProductSet.createProduct("neat-fin-275018",
                             "europe-west1",

@@ -1,5 +1,6 @@
 package com.searchoutfit.app.vision;
 import com.google.api.gax.longrunning.OperationFuture;
+import com.google.cloud.ByteArray;
 import com.google.cloud.vision.v1.*;
 import com.google.cloud.vision.v1.ImportProductSetsGcsSource.Builder;
 import org.springframework.stereotype.Service;
@@ -360,7 +361,7 @@ public class ManageProductSet {
     }
 
     public void uploadObject(
-                String projectId, String bucketName, String objectName, String filePath) throws IOException {
+            String projectId, String bucketName, String objectName, byte[] response) throws IOException {
             // The ID of your GCP project
             // String projectId = "your-project-id";
 
@@ -373,18 +374,18 @@ public class ManageProductSet {
             // The path to your file to upload
             // String filePath = "path/to/your/file"
 
-            URL url = new URL(filePath);
-            InputStream in = new BufferedInputStream(url.openStream());
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            byte[] buf = new byte[1024];
-            int n = 0;
-            while (-1!=(n=in.read(buf)))
-            {
-                out.write(buf, 0, n);
-            }
-            out.close();
-            in.close();
-            byte[] response = out.toByteArray();
+//            URL url = new URL(filePath);
+//            InputStream in = new BufferedInputStream(url.openStream());
+//            ByteArrayOutputStream out = new ByteArrayOutputStream();
+//            byte[] buf = new byte[1024];
+//            int n = 0;
+//            while (-1!=(n=in.read(buf)))
+//            {
+//                out.write(buf, 0, n);
+//            }
+//            out.close();
+//            in.close();
+//            byte[] response = out.toByteArray();
 
             Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
             BlobId blobId = BlobId.of(bucketName, objectName);
@@ -392,7 +393,7 @@ public class ManageProductSet {
             storage.create(blobInfo, response);
 
             System.out.println(
-                    "File " + filePath + " uploaded to bucket " + bucketName + " as " + objectName);
+                    "File " + " uploaded to bucket " + bucketName + " as " + objectName);
         }
 
 }
