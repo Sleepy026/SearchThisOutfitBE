@@ -309,6 +309,33 @@ public class ManageProductSet {
         }
     }
 
+    public void deleteProduct(String projectId, String computeRegion, String productId)
+            throws IOException {
+        try (ProductSearchClient client = ProductSearchClient.create()) {
+
+            // Get the full path of the product.
+            String formattedName =
+                    ProductSearchClient.formatProductName(projectId, computeRegion, productId);
+
+            // Delete a product.
+            client.deleteProduct(formattedName);
+            System.out.println("Product deleted.");
+        }
+    }
+
+    public void deleteProductSet(String projectId, String computeRegion, String productSetId)
+            throws IOException {
+        try (ProductSearchClient client = ProductSearchClient.create()) {
+
+            // Get the full path of the product set.
+            String formattedName =
+                    ProductSearchClient.formatProductSetName(projectId, computeRegion, productSetId);
+            // Delete the product set.
+            client.deleteProductSet(formattedName);
+            System.out.println(String.format("Product set deleted"));
+        }
+    }
+
     public void getReferenceImage(
             String projectId, String computeRegion, String productId, String referenceImageId)
             throws IOException {
