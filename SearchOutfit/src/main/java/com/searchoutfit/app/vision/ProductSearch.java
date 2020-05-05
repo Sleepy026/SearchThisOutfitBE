@@ -13,19 +13,22 @@ import com.google.cloud.vision.v1.ProductSearchParams;
 import com.google.cloud.vision.v1.ProductSearchResults.Result;
 import com.google.cloud.vision.v1.ProductSetName;
 import com.google.protobuf.ByteString;
+import com.searchoutfit.app.vision.model.ProductModel;
 import org.springframework.stereotype.Service;
+import webscraper.Product;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class ProductSearch {
 
-    public void getSimilarProductsGcs(
+    public List<ProductModel> getSimilarProductsGcs(
             String projectId,
             String computeRegion,
             String productSetId,
@@ -64,18 +67,18 @@ public class ProductSearch {
             // Search products similar to the image.
             BatchAnnotateImagesResponse response = queryImageClient.batchAnnotateImages(requests);
 
-            List<Result> similarProducts =
-                    response.getResponses(0).getProductSearchResults().getResultsList();
-            System.out.println("Similar Products: ");
+            List<Result> similarProducts = response.getResponses(0).getProductSearchResults().getResultsList();
+            List<ProductModel> models = new ArrayList<>();
             for (Result product : similarProducts) {
-                System.out.println(String.format("\nProduct name: %s", product.getProduct().getName()));
-                System.out.println(
-                        String.format("Product display name: %s", product.getProduct().getDisplayName()));
-                System.out.println(
-                        String.format("Product description: %s", product.getProduct().getDescription()));
-                System.out.println(String.format("Score(Confidence): %s", product.getScore()));
-                System.out.println(String.format("Image name: %s", product.getImage()));
+                ProductModel model = ProductModel.builder()
+                        .name(product.getProduct().getDisplayName())
+                        .score(product.getScore())
+                        .url(product.getProduct().getDescription())
+                        .imgUrl(product.getProduct().getDisplayName())
+                        .build();
+                models.add(model);
             }
+            return models;
         }
     }
 }
