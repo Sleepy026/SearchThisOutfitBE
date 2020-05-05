@@ -74,8 +74,8 @@ public class ProductSearch {
                         .name(product.getProduct().getDisplayName())
                         .score(product.getScore())
                         .url(product.getProduct().getDescription())
-                        .imgUrl(product.getProduct().getDisplayName())
                         .build();
+                model.setImgUrl(product.getProduct().getDisplayName());
                 models.add(model);
             }
             return models;
