@@ -25,7 +25,7 @@ import java.util.List;
 @Service
 public class ProductSearch {
 
-    public void getSimilarProductsGcs(
+    public List<Result> getSimilarProductsGcs(
             String projectId,
             String computeRegion,
             String productSetId,
@@ -64,18 +64,18 @@ public class ProductSearch {
             // Search products similar to the image.
             BatchAnnotateImagesResponse response = queryImageClient.batchAnnotateImages(requests);
 
-            List<Result> similarProducts =
-                    response.getResponses(0).getProductSearchResults().getResultsList();
-            System.out.println("Similar Products: ");
-            for (Result product : similarProducts) {
-                System.out.println(String.format("\nProduct name: %s", product.getProduct().getName()));
-                System.out.println(
-                        String.format("Product display name: %s", product.getProduct().getDisplayName()));
-                System.out.println(
-                        String.format("Product description: %s", product.getProduct().getDescription()));
-                System.out.println(String.format("Score(Confidence): %s", product.getScore()));
-                System.out.println(String.format("Image name: %s", product.getImage()));
-            }
+//            List<Result> similarProducts =
+            return response.getResponses(0).getProductSearchResults().getResultsList();
+//            System.out.println("Similar Products: ");
+//            for (Result product : similarProducts) {
+//                System.out.println(String.format("\nProduct name: %s", product.getProduct().getName()));
+//                System.out.println(
+//                        String.format("Product display name: %s", product.getProduct().getDisplayName()));
+//                System.out.println(
+//                        String.format("Product description: %s", product.getProduct().getDescription()));
+//                System.out.println(String.format("Score(Confidence): %s", product.getScore()));
+//                System.out.println(String.format("Image name: %s", product.getImage()));
+//            }
         }
     }
 }
