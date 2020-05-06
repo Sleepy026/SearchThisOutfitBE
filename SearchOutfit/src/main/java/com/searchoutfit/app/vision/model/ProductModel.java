@@ -18,6 +18,6 @@ public class ProductModel {
     private String imgUrl;
 
     public void setImgUrl(String displayName){
-        this.imgUrl = "gs://productsearch1337/" + displayName;
+        this.imgUrl = "https://storage.googleapis.com/productsearch1337/" + displayName;
     }
 }

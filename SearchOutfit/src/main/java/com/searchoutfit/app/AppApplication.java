@@ -3,6 +3,7 @@ package com.searchoutfit.app;
 import com.searchoutfit.app.vision.ManageProductSet;
 import com.searchoutfit.app.vision.ProductCatalog;
 import com.searchoutfit.app.vision.ProductSearch;
+import com.searchoutfit.app.vision.model.ProductModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,16 +30,23 @@ public class AppApplication {
         SpringApplication.run(AppApplication.class, args);
     }
 
-//    @PostConstruct
-//    public void init() throws Exception {
-//
-//        productSearch.getSimilarProductsGcs(
-//                "neat-fin-275018",
-//                "europe-west1",
-//                "clothes",
-//                "apparel-v2",
-//                "gs://productsearch1337/Mintás póló logóval");
-//    }
+    @PostConstruct
+    public void init() throws Exception {
+
+        List<ProductModel> clothes = productSearch.getSimilarProductsGcs(
+                "neat-fin-275018",
+                "europe-west1",
+                "clothes",
+                "apparel-v2",
+                "gs://productsearch1337/Mintás póló logóval");
+
+        manageProductSet.getReferenceImage("neat-fin-275018",
+                "europe-west1",
+                "2681519",
+                "img2681519");
+
+        System.out.println("asd");
+    }
 
 
 }
